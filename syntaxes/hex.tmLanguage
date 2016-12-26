@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <key>scopeName</key>
+        <string>text.hex</string>
+
+        <key>fileTypes</key>
+        <array>
+            <string>hex</string>
+            <string>HEX</string>
+        </array>
+
+        <key>name</key>
+        <string>Intel Hex format</string>
+
+        <key>patterns</key>
+        <array>
+            <dict>
+                <key>match</key>
+                <string>(:)([0-9A-Fa-f]{2})([0-9A-Fa-f]{4})([0-9A-Fa-f]{2})([0-9A-Fa-f]*?)([0-9A-Fa-f]{2})$</string>
+                <key>captures</key>
+                <dict>
+                    <key>1</key>
+                    <dict>
+                        <key>name</key>
+                        <string>keyword.operator</string>
+                    </dict>
+                    <key>2</key>
+                    <dict>
+                        <key>name</key>
+                        <string>constant.numeric</string>
+                    </dict>
+                    <key>3</key>
+                    <dict>
+                        <key>name</key>
+                        <string>variable.parameter</string>
+                    </dict>
+                    <key>4</key>
+                    <dict>
+                        <key>name</key>
+                        <string>entity.name.type</string>
+                    </dict>
+                    <key>6</key>
+                    <dict>
+                        <key>name</key>
+                        <string>markup.bold</string>
+                    </dict>
+                </dict>
+            </dict>
+        </array>
+    </dict>
+</plist>
