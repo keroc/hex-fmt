@@ -3,7 +3,7 @@
     "displayName": "hex-fmt",
     "description": "Intel hex format language",
     "version": "0.0.1",
-    "publisher": "kevroc",
+    "publisher": "keroc",
     "engines": {
         "vscode": "^1.5.0"
     },
@@ -16,7 +16,8 @@
     "main": "./out/src/extension",
     "contributes": {
         "languages": [{
-            "id": "hex"
+            "id": "hex",
+            "extensions": [ ".hex" , ".HEX" ]
         }],
         "grammars": [{
             "language": "hex",
