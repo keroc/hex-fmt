@@ -1,4 +1,4 @@
-# ihex README
+# hex-fmt README
 
 This is the README for your extension "ihex". After writing up a brief description, we recommend including the following sections.
 

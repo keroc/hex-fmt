@@ -11,7 +11,7 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:extension.sayHello"
+        "onLanguage:hex"
     ],
     "main": "./out/src/extension",
     "contributes": {
@@ -23,10 +23,6 @@
             "language": "hex",
             "scopeName": "text.hex",
             "path": "./syntaxes/hex.tmLanguage"
-        }],
-        "commands": [{
-            "command": "extension.sayHello",
-            "title": "Hello World"
         }]
     },
     "scripts": {

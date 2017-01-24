@@ -14,12 +14,11 @@ var TYPES = {
 var HEADERLENGTH = 9
 
 export class HexLine {
-    
     startCode: string;
     nbData: number;
     address: number;
     hexType: number;
-    data: number;
+    data: number[];
     checksum: number;
 
     correctHdr : boolean;
@@ -54,8 +53,24 @@ export class HexLine {
         return res;
     }
 
-    public size() {
-        if(this.correctHdr && this.hexType === TYPES.DATA) {
+    public isData(): boolean {
+        return this.correctHdr && this.hexType === TYPES.DATA;
+    }
+
+    public isExtendedAddress(): boolean {
+        return this.correctHdr && (this.hexType === TYPES.EXTSEGADDRESS || this.hexType === TYPES.EXTLINADDRESS);
+    }
+
+    public isStartAddress(): boolean {
+        return this.correctHdr && (this.hexType === TYPES.STARTSEGADDRESS || this.hexType === TYPES.STARTLINADDRESS);
+    }
+
+    public isEOF(): boolean {
+        return this.correctHdr && this.hexType === TYPES.EOF;
+    }
+
+    public size(): number {
+        if(this.isData()) {
             return this.nbData;
         }
 
