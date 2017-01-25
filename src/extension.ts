@@ -79,7 +79,7 @@ class HexDocument {
         for (let i = 0; i < doc.lineCount; i++) {
             this._hexLines.push(new HexLine(doc.lineAt(i).text, offset));
             
-            // Update size
+            // Update size)
             this._size += this._hexLines[i].size();
 
             // Check if a new offset is set

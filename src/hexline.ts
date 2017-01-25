@@ -123,7 +123,7 @@ export class HexLine {
             case TYPES.EXTSEGADDRESS:
                 return (this.data[0] * 256 + this.data[1]) * 16;
             case TYPES.EXTLINADDRESS:
-                return (this.data[0] * 256 + this.data[1]) << 16;
+                return (this.data[0] * 256 + this.data[1]) * 65536;
         }
 
         return -1;
