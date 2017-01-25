@@ -23,6 +23,10 @@
             "language": "hex",
             "scopeName": "text.hex",
             "path": "./syntaxes/hex.tmLanguage"
+        }],
+        "commands": [{
+            "command": "extension.seekAddress",
+            "title": "Seek Hex Address"
         }]
     },
     "scripts": {

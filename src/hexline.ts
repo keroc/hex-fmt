@@ -128,4 +128,16 @@ export class HexLine {
 
         return -1;
     }
+
+    public addressToChar(address: number) : number {
+        if(this.isData()) {
+            let lowRange = this.address + this._addOffset;
+            let highRange = lowRange + this.nbData -1;
+
+            if(lowRange <= address && address <= highRange) {
+                return ((address - lowRange) * 2) + HEADERLENGTH;
+            }
+        }
+        return -1;
+    }
 }

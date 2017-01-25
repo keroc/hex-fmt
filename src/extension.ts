@@ -1,7 +1,7 @@
 'use strict';
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
-import {window, commands, Disposable, ExtensionContext, StatusBarAlignment, StatusBarItem, TextDocument, Position} from 'vscode';
+import {window, commands, Disposable, ExtensionContext, StatusBarAlignment, StatusBarItem, TextDocument, Position, Selection} from 'vscode';
 import {HexLine} from './hexline';
 
 // this method is called when your extension is activated
@@ -15,7 +15,31 @@ export function activate(context: ExtensionContext) {
     let hexDoc = new HexDocument();
     let controller = new HexDocumentController(hexDoc);
 
+    var disposable = commands.registerCommand('extension.seekAddress', () => {
+        // Check this is an .hex file
+        if(window.activeTextEditor.document.languageId != "hex")
+        {
+            window.showErrorMessage("This command is only available with \".hex\" files.");
+            return;
+        }
+
+        // Display a message box to the user
+        window.showInputBox({prompt: 'Type an adress to seek'}).then(val => {
+            let address = parseInt(val);
+            if(address === NaN || address < 0) {
+                window.showErrorMessage("Wrong address format.");
+                return;
+            }
+
+            // Go to the address
+            if (!hexDoc.goToAddress(address)) {
+                window.showWarningMessage("The address 0x" + address.toString(16) + " was not found.")
+            }
+        });
+    });
+
     // Add to a list of disposables which are disposed when this extension is deactivated.
+    context.subscriptions.push(disposable);
     context.subscriptions.push(controller);
     context.subscriptions.push(hexDoc);
 }
@@ -72,6 +96,24 @@ class HexDocument {
         }
     }
 
+    public goToAddress(address: number) : boolean {
+        for(let i = 0; i < this._hexLines.length; i++) {
+            let char = this._hexLines[i].addressToChar(address);
+            if(char >= 0) {
+                // Get the current text editor
+                let editor = window.activeTextEditor;
+                let pos = new Position(i, char);
+                let sel = new Selection(pos, pos);
+                
+                // Set the new position
+                editor.selection = sel;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private _updateDoc(doc: TextDocument) {
         let offset = 0;
         this._hexLines = [];
@@ -79,7 +121,7 @@ class HexDocument {
         for (let i = 0; i < doc.lineCount; i++) {
             this._hexLines.push(new HexLine(doc.lineAt(i).text, offset));
             
-            // Update size)
+            // Update size
             this._size += this._hexLines[i].size();
 
             // Check if a new offset is set
