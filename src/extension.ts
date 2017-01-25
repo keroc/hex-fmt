@@ -1,7 +1,7 @@
 'use strict';
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
-import {window, commands, Disposable, ExtensionContext, StatusBarAlignment, StatusBarItem, TextDocument} from 'vscode';
+import {window, commands, Disposable, ExtensionContext, StatusBarAlignment, StatusBarItem, TextDocument, Position} from 'vscode';
 import {HexLine} from './hexline';
 
 // this method is called when your extension is activated
@@ -43,19 +43,29 @@ class HexDocument {
             return;
         }
 
+        let pos = editor.selection.active;
         let doc = editor.document;
 
         // Only update status if an Hex file
         if (doc.languageId === "hex") {
             this._updateDoc(doc);
 
-            // Update the status bar
+            // Update the size
             if (this._size < 1024) {
                 this._statusBarItem.text = `${this._size} B`;
             } else {
                 let showableSize = this._size / 1024;
                 this._statusBarItem.text = `${showableSize} KB`;
             }
+
+            // Update the address
+            if(this._hexLines[pos.line].isData()) {
+                let address = this._hexLines[pos.line].charToAddress(pos.character);
+                if(address >= 0) {
+                    this._statusBarItem.text += ` | ${address.toString(16)}`;
+                }
+            }
+
             this._statusBarItem.show();
         } else { 
             this._statusBarItem.hide();
@@ -63,11 +73,20 @@ class HexDocument {
     }
 
     private _updateDoc(doc: TextDocument) {
+        let offset = 0;
         this._hexLines = [];
         this._size = 0;        
         for (let i = 0; i < doc.lineCount; i++) {
-            this._hexLines.push(new HexLine(doc.lineAt(i).text));
-            this._size += this._hexLines[i].size()
+            this._hexLines.push(new HexLine(doc.lineAt(i).text, offset));
+            
+            // Update size
+            this._size += this._hexLines[i].size();
+
+            // Check if a new offset is set
+            if(this._hexLines[i].isExtendedAddress())
+            {
+                offset = this._hexLines[i].extAddress();
+            }
         }
     }
 
