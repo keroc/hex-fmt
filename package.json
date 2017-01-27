@@ -12,7 +12,7 @@
     ],
     "activationEvents": [
         "onLanguage:hex",
-        "onCommand:extension.seekAddress",
+        "onCommand:extension.hexFind",
         "onCommand:extension.repairHex"
     ],
     "main": "./out/src/extension",
@@ -27,12 +27,12 @@
             "path": "./syntaxes/hex.tmLanguage"
         }],
         "commands": [{
-            "command": "extension.seekAddress",
-            "title": "Seek Hex Address"
+            "command": "extension.hexFind",
+            "title": "Hex Find"
         },
         {
             "command": "extension.repairHex",
-            "title": "Repair Hex File"
+            "title": "Hex Repair"
         }],
         "configuration": {
             "type": "object",

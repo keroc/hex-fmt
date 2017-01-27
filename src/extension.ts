@@ -8,15 +8,12 @@ import {HexDocument} from './hexdoc'
 // your extension is activated the very first time the command is executed
 export function activate(context: ExtensionContext) {
 
-    // This line of code will only be executed once when your extension is activated
-    console.log('Congratulations, your extension "ihex" is now active!');
-
     // create a new HexDocument
     let hexDoc = new HexDocument();
     let controller = new HexDocumentController(hexDoc);
 
-    var seekDisposable = commands.registerCommand('extension.seekAddress', () => {
-        // Check this is an .hex file
+    var seekDisposable = commands.registerCommand('extension.hexFind', () => {
+        // Check this is a .hex file
         if(window.activeTextEditor.document.languageId != "hex")
         {
             window.showErrorMessage("This command is only available with \".hex\" files.");
@@ -24,7 +21,7 @@ export function activate(context: ExtensionContext) {
         }
 
         // Display a message box to the user
-        window.showInputBox({prompt: 'Type an adress to seek'}).then(val => {
+        window.showInputBox({prompt: 'Type an adress to find'}).then(val => {
             let address = parseInt(val);
             if(address === NaN || address < 0) {
                 window.showErrorMessage("Wrong address format.");
@@ -39,7 +36,7 @@ export function activate(context: ExtensionContext) {
     });
 
     var repairDisposable = commands.registerCommand('extension.repairHex', () => {
-        // Check this is an .hex file
+        // Check this is a .hex file
         if(window.activeTextEditor.document.languageId != "hex")
         {
             window.showErrorMessage("This command is only available with \".hex\" files.");
@@ -49,7 +46,7 @@ export function activate(context: ExtensionContext) {
         // Repair the document
         let nbRep = hexDoc.repair();
         if(nbRep > 0) {
-            window.showInformationMessage((nbRep === 1) ? "1 line has been repaired." : nbRep + " lines have been repaired");
+            window.showInformationMessage((nbRep === 1) ? "1 record has been repaired." : nbRep + " records have been repaired");
         } else {
             window.showInformationMessage("Nothing has been done.");
         }
