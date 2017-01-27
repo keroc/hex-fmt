@@ -11,7 +11,9 @@
         "Other"
     ],
     "activationEvents": [
-        "onLanguage:hex"
+        "onLanguage:hex",
+        "onCommand:extension.seekAddress",
+        "onCommand:extension.repairHex"
     ],
     "main": "./out/src/extension",
     "contributes": {
@@ -27,6 +29,10 @@
         "commands": [{
             "command": "extension.seekAddress",
             "title": "Seek Hex Address"
+        },
+        {
+            "command": "extension.repairHex",
+            "title": "Repair Hex File"
         }]
     },
     "scripts": {

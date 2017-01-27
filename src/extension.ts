@@ -1,7 +1,7 @@
 'use strict';
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
-import {window, commands, Disposable, ExtensionContext, StatusBarAlignment, StatusBarItem, TextDocument, Position, Selection} from 'vscode';
+import {window, workspace, commands, Disposable, ExtensionContext, StatusBarAlignment, StatusBarItem, TextDocument, Position, Selection, Range, TextEdit, WorkspaceEdit} from 'vscode';
 import {HexLine} from './hexline';
 
 // this method is called when your extension is activated
@@ -15,7 +15,7 @@ export function activate(context: ExtensionContext) {
     let hexDoc = new HexDocument();
     let controller = new HexDocumentController(hexDoc);
 
-    var disposable = commands.registerCommand('extension.seekAddress', () => {
+    var seekDisposable = commands.registerCommand('extension.seekAddress', () => {
         // Check this is an .hex file
         if(window.activeTextEditor.document.languageId != "hex")
         {
@@ -38,8 +38,26 @@ export function activate(context: ExtensionContext) {
         });
     });
 
+    var repairDisposable = commands.registerCommand('extension.repairHex', () => {
+        // Check this is an .hex file
+        if(window.activeTextEditor.document.languageId != "hex")
+        {
+            window.showErrorMessage("This command is only available with \".hex\" files.");
+            return;
+        }
+
+        // Repair the document
+        let nbRep = hexDoc.repair();
+        if(nbRep > 0) {
+            window.showInformationMessage((nbRep === 1) ? "1 line has been repaired." : nbRep + " lines have been repaired");
+        } else {
+            window.showInformationMessage("Nothing has been done.");
+        }
+    });
+
     // Add to a list of disposables which are disposed when this extension is deactivated.
-    context.subscriptions.push(disposable);
+    context.subscriptions.push(repairDisposable);
+    context.subscriptions.push(seekDisposable);
     context.subscriptions.push(controller);
     context.subscriptions.push(hexDoc);
 }
@@ -76,17 +94,17 @@ class HexDocument {
 
             // Update the size
             if (this._size < 1024) {
-                this._statusBarItem.text = `${this._size} B`;
+                this._statusBarItem.text = `$(file-binary) ${this._size} B`;
             } else {
                 let showableSize = this._size / 1024;
-                this._statusBarItem.text = `${showableSize} KB`;
+                this._statusBarItem.text = `$(file-binary) ${showableSize} KB`;
             }
 
             // Update the address
             if(this._hexLines[pos.line].isData()) {
                 let address = this._hexLines[pos.line].charToAddress(pos.character);
                 if(address >= 0) {
-                    this._statusBarItem.text += ` | ${address.toString(16)}`;
+                    this._statusBarItem.text += ` $(mention) 0x${address.toString(16).toUpperCase()}`;
                 }
             }
 
@@ -112,6 +130,33 @@ class HexDocument {
         }
 
         return false;
+    }
+
+    public repair() : number {
+        
+        // Create the workspace edit
+        let workspaceEdit = new WorkspaceEdit();
+        let doc = window.activeTextEditor.document;
+        let edits = [];
+
+        for(let i = 0; i < this._hexLines.length; i++)
+        {
+            if(this._hexLines[i].isBroken()) {
+                if(this._hexLines[i].repair()) {
+                    // Build the text Edit
+                    let range = doc.lineAt(i).range;
+                    edits.push(new TextEdit(range, this._hexLines[i].toString()));
+                }
+            }
+        }
+
+        // Do the edition
+        if(edits.length > 0) {
+            workspaceEdit.set(doc.uri, edits);
+            workspace.applyEdit(workspaceEdit);
+        }
+
+        return edits.length;
     }
 
     private _updateDoc(doc: TextDocument) {
