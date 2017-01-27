@@ -133,7 +133,7 @@ class HexDocument {
     }
 
     public repair() : number {
-        
+
         // Create the workspace edit
         let workspaceEdit = new WorkspaceEdit();
         let doc = window.activeTextEditor.document;
@@ -194,8 +194,9 @@ class HexDocumentController {
 
         // Subscribe to text change event
         let subscriptions: Disposable[] = [];
-        window.onDidChangeActiveTextEditor(this._onEvent, this, subscriptions);
-        window.onDidChangeTextEditorSelection(this._onEvent, this, subscriptions)
+        window.onDidChangeActiveTextEditor(this._onEdit, this, subscriptions);
+        window.onDidChangeTextEditorSelection(this._onEdit, this, subscriptions);
+        workspace.onDidSaveTextDocument(this._onSave, this, subscriptions);
 
         // Create a combined disposable
         this._disposable = Disposable.from(...subscriptions);
@@ -205,7 +206,19 @@ class HexDocumentController {
         this._disposable.dispose();
     }
 
-    private _onEvent() {
+    private _onEdit() {
         this._hexDoc.updateStatusBar();
+    }
+
+    private _onSave() {
+        // Check this is an .hex file
+        if(window.activeTextEditor.document.languageId === "hex" &&
+            workspace.getConfiguration("hex-fmt").get("repairOnSave", false)) {
+            // Repair and save if needed
+            if(this._hexDoc.repair() > 0)
+            {
+                window.activeTextEditor.document.save();
+            }
+        }
     }
 }

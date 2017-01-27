@@ -33,7 +33,18 @@
         {
             "command": "extension.repairHex",
             "title": "Repair Hex File"
-        }]
+        }],
+        "configuration": {
+            "type": "object",
+            "title": "Hex-fmt configuration",
+            "properties": {
+                "hex-fmt.repairOnSave": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Try to repair an hex file each times it's saved."
+                }
+            }
+        }
     },
     "scripts": {
         "vscode:prepublish": "tsc -p ./",
