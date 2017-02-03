@@ -1,13 +1,25 @@
 {
     "name": "hex-fmt",
-    "displayName": "hex-fmt",
-    "description": "Intel hex format language",
-    "version": "0.0.1",
+    "displayName": "Intel HEX format",
+    "description": "Adds support for the Intel HEX file format with syntax highlighting and basic commands",
+    "version": "1.0.0",
     "publisher": "keroc",
+    "icon": "images/icone.png",
+    "galleryBanner": {
+        "color": "#5c2d91",
+        "theme": "dark"
+    },
+    "license": "SEE LICENSE IN LICENSE.md",
+    "homepage": "https://github.com/keroc/hex-fmt/blob/master/README.md",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/keroc/hex-fmt"
+    },
     "engines": {
         "vscode": "^1.5.0"
     },
     "categories": [
+        "Languages",
         "Other"
     ],
     "activationEvents": [

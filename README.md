@@ -4,7 +4,7 @@ hex-fmt is a Visual Studio Code extension that adds basic support for the [intel
 
 ## Features
 
-![hex features](images/example.png)
+![hex features](images/example.gif)
 
 ### Color syntax
 
@@ -26,7 +26,7 @@ Adds some information on the status bar:
 
 Broken hex files can be repaired either automatically on save or by explecitly calling a command.
 
-![hex features](images/example.png)
+![hex features](images/repair.gif)
 
 The reperation process is done record by record and is based on each record header (from startcode to record type).
 This means that at least the header must be correct to repair a record. Then the data will be fitted to the byte count and the checksum will be updated.
@@ -43,9 +43,11 @@ This extension contributes the following settings:
 
 * `hex-fmt.repairOnSave`: tells if an hex file must be repaired when saved (default to true).
 
+## License
+
+This project is licensed under the terms of the MIT license.
+See [LICENSE.md](LICENSE.md).
+
 ## Release Notes
 
-### 1.0.0
-
-Initial release
-> Not finnished yet, still in development
+See [CHANGELOG.md](CHANGELOG.md).
