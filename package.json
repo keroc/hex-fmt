@@ -29,23 +29,32 @@
     ],
     "main": "./out/src/extension",
     "contributes": {
-        "languages": [{
-            "id": "hex",
-            "extensions": [ ".hex" , ".HEX" ]
-        }],
-        "grammars": [{
-            "language": "hex",
-            "scopeName": "text.hex",
-            "path": "./syntaxes/hex.tmLanguage"
-        }],
-        "commands": [{
-            "command": "extension.hexFind",
-            "title": "Hex Find"
-        },
-        {
-            "command": "extension.repairHex",
-            "title": "Hex Repair"
-        }],
+        "languages": [
+            {
+                "id": "hex",
+                "extensions": [
+                    ".hex",
+                    ".HEX"
+                ]
+            }
+        ],
+        "grammars": [
+            {
+                "language": "hex",
+                "scopeName": "text.hex",
+                "path": "./syntaxes/hex.tmLanguage"
+            }
+        ],
+        "commands": [
+            {
+                "command": "extension.hexFind",
+                "title": "Hex Find"
+            },
+            {
+                "command": "extension.repairHex",
+                "title": "Hex Repair"
+            }
+        ],
         "configuration": {
             "type": "object",
             "title": "Hex-fmt configuration",
