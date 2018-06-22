@@ -145,7 +145,7 @@ export class HexLine {
     }
 
     private computedChk() : number {
-        return 255 - (this._byteSum % 256) + 1;
+        return (255 - (this._byteSum % 256) + 1) % 256;
     }
 
     public isBroken() : boolean {
